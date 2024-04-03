@@ -1,8 +1,9 @@
-import time
 import unittest
+import tinytuya
+import time
 
-# List of all smart devices in the house.
-#In this code, "device1_id", "device1_key", "device1_ip", "device2_id", "device2_key", "device2_ip", "device3_id", "device3_key", and "device3_ip" need to be replaced with real identifiers, keys and IP addresses your devices.
+#Visu mājā esošo viedierīču saraksts.
+#Šajā kodā, "device1_id", "device1_key", "device1_ip", "device2_id", "device2_key", "device2_ip", "device3_id", "device3_key", and "device3_ip" jāaizstāj ar reāliem identifikatoriem, atslēgām un jūsu ierīču IP adresēm.
 
 smart_devices = [
     {"id": "device1_id", "key": "device1_key", "ip": "device1_ip"},
@@ -11,15 +12,17 @@ smart_devices = [
 ]
 
 def turn_on_device(device):
-    """Function to turn on the device"""
+    """Ierīces ieslēgšanas funkcija"""
+    d = tinytuya.OutletDevice(device["id"], device["ip"], device["key"])
+    d.set_status(True)
     print(f"{device['id']} enabled.")
     return True
 
 def main():
-    """Main function that turns on all devices on startup"""
+    """Galvenā funkcija, kas ieslēdz visas ierīces startēšanas laikā"""
     for device in smart_devices:
         turn_on_device(device)
-        time.sleep(1)  # Pause between commands
+        time.sleep(1)  # Pauze starp komandām
 
 class TestTurnOnDevice(unittest.TestCase):
     def test_turn_on_device(self):
