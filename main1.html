@@ -1,0 +1,60 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Device Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Smart Device Controller</h1>
+    <button onclick="turnOnAllDevices()">Turn On All Devices</button>
+    <script>
+        async function turnOnAllDevices() {
+            const devices = [
+                {id: "device1_id", key: "device1_key", ip: "device1_ip"},
+                {id: "device2_id", key: "device2_key", ip: "device2_ip"},
+                {id: "device3_id", key: "device3_key", ip: "device3_ip"}
+            ];
+            for (const device of devices) {
+                await turnOnDevice(device);
+                await sleep(1000);  // Pause between commands
+            }
+        }
+        async function turnOnDevice(device) {
+            // Implementation to communicate with backend (Python code) to turn on the device
+            // You would typically make an API call to your backend where the Python code is running
+            console.log(`Turning on device: ${device.id}`);
+            // Make API call here
+        }
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>
