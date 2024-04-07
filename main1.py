@@ -1,6 +1,7 @@
 import unittest
 import tinytuya
 import time
+from cryptography.fernet import Fernet
 
 #Visu mājā esošo viedierīču saraksts.
 #Šajā kodā, "device1_id", "device1_key", "device1_ip", "device2_id", "device2_key", "device2_ip", "device3_id", "device3_key", and "device3_ip" jāaizstāj ar reāliem identifikatoriem, atslēgām un jūsu ierīču IP adresēm.
@@ -11,9 +12,16 @@ smart_devices = [
     {"id": "device3_id", "key": "device3_key", "ip": "device3_ip"},
 ]
 
+def encrypt_key(key):
+    """Atslēgu šifrēšanas funkcija"""
+    cipher_suite = Fernet(Fernet.generate_key())
+    cipher_text = cipher_suite.encrypt(key.encode())
+    return cipher_text
+
 def turn_on_device(device):
     """Ierīces ieslēgšanas funkcija"""
-    d = tinytuya.OutletDevice(device["id"], device["ip"], device["key"])
+    encrypted_key = encrypt_key(device["key"])
+    d = tinytuya.OutletDevice(device["id"], device["ip"], encrypted_key)
     d.set_status(True)
     print(f"{device['id']} enabled.")
     return True
