@@ -3,39 +3,30 @@ import tinytuya
 import time
 from cryptography.fernet import Fernet
 
-#Visu mājā esošo viedierīču saraksts.
-#Šajā kodā, "device1_id", "device1_key", "device1_ip", "device2_id", "device2_key", "device2_ip", "device3_id", "device3_key", and "device3_ip" jāaizstāj ar reāliem identifikatoriem, atslēgām un jūsu ierīču IP adresēm.
+class SmartDevice:
+    def __init__(self, id, key, ip):
+        self.id = id
+        self.key = key
+        self.ip = ip
 
-smart_devices = [
-    {"id": "device1_id", "key": "device1_key", "ip": "device1_ip"},
-    {"id": "device2_id", "key": "device2_key", "ip": "device2_ip"},
-    {"id": "device3_id", "key": "device3_key", "ip": "device3_ip"},
-]
+    def encrypt_key(self):
+        """Функция для шифрования ключа"""
+        cipher_suite = Fernet(Fernet.generate_key())
+        cipher_text = cipher_suite.encrypt(self.key.encode())
+        return cipher_text
 
-def encrypt_key(key):
-    """Atslēgu šifrēšanas funkcija"""
-    cipher_suite = Fernet(Fernet.generate_key())
-    cipher_text = cipher_suite.encrypt(key.encode())
-    return cipher_text
-
-def turn_on_device(device):
-    """Ierīces ieslēgšanas funkcija"""
-    encrypted_key = encrypt_key(device["key"])
-    d = tinytuya.OutletDevice(device["id"], device["ip"], encrypted_key)
-    d.set_status(True)
-    print(f"{device['id']} enabled.")
-    return True
-
-def main():
-    """Galvenā funkcija, kas ieslēdz visas ierīces startēšanas laikā"""
-    for device in smart_devices:
-        turn_on_device(device)
-        time.sleep(1)  # Pauze starp komandām
+    def turn_on(self):
+        """Ierīces ieslēgšanas funkcija"""
+        encrypted_key = self.encrypt_key()
+        d = tinytuya.OutletDevice(self.id, self.ip, encrypted_key)
+        d.set_status(True)
+        print(f"{self.id} enabled.")
+        return True
 
 class TestTurnOnDevice(unittest.TestCase):
     def test_turn_on_device(self):
-        device = {"id": "test_id", "key": "test_key", "ip": "test_ip"}
-        self.assertTrue(turn_on_device(device))
+        device = SmartDevice("test_id", "test_key", "test_ip")
+        self.assertTrue(device.turn_on())
 
 if __name__ == "__main__":
     unittest.main()
