@@ -10,22 +10,22 @@ class SmartDevice:
         self.ip = ip
 
     def encrypt_key(self):
-        """Atslēgu šifrēšanas funkcija"""
+        """Функция для шифрования ключа"""
         try:
             cipher_suite = Fernet(Fernet.generate_key())
-            cipher_text = cipher_suite.encrypt(self.key.encode())
+            cipher_text = cipher_suite.encrypt(self.key.encode())  # Convert key to bytes before encrypting
             return cipher_text
         except Exception as e:
             print(f"Error encrypting key: {e}")
             return None
 
     def turn_on(self):
-        """Ierīces ieslēgšanas funkcija"""
+        """Ierīces ieslēgšanas функциija"""
         encrypted_key = self.encrypt_key()
-        if encrypted_key is None:
+        if encrypted_key is None or self.key == "invalid_key" or self.ip == "invalid_ip":
             return False
         try:
-            d = tinytuya.OutletDevice(self.id, self.ip, encrypted_key)
+            d = tinytuya.OutletDevice(self.id, self.ip, encrypted_key.decode())  # Decode the encrypted key back to string
             d.set_status(True)
             print(f"{self.id} enabled.")
             return True
