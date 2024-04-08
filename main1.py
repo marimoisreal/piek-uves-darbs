@@ -10,7 +10,7 @@ class SmartDevice:
         self.ip = ip
 
     def encrypt_key(self):
-        """Функция для шифрования ключа"""
+        """Atslēgas šifrēšanas funkcija"""
         cipher_suite = Fernet(Fernet.generate_key())
         cipher_text = cipher_suite.encrypt(self.key.encode())
         return cipher_text
